@@ -1,0 +1,30 @@
+require("dotenv").config()
+const mongoose = require("mongoose");
+const jobs = require("./job-model");
+mongoose.connect(process.env.DB_URL,{useNewUrlParser:true,useUnifiedTopology:true});
+mongoose.connection.on('connected',function(){
+    console.log(process.env.DB_CONNECT_MSG+process.env.DB_NAME);
+})
+mongoose.connection.on('disconnected',function(){
+    console.log(process.env.DB_DISCONNECT_MSG+process.env.DB_NAME);
+})
+mongoose.connection.on('error',function(error){
+    console.log(process.env.DB_ERROR_MSG+error);
+})
+process.on('SIGINT',function(){
+    mongoose.connection.close(function(){
+        console.log(process.env.SIGINT_MSG);
+        process.exit(0);
+    })
+})
+process.on('SIGTERM',function(){
+    mongoose.connection.close(function(){
+        console.log(process.env.SIGTERM_MSG)
+    })
+})
+process.on('SIGUSR2',function(){
+    mongoose.connection.close(function(){
+        console.log(process.env.SIGUSR2_MSG)
+        process.kill(process.pid,"SIGUSR2")
+    })
+})
