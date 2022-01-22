@@ -22,6 +22,8 @@ export class Job{
 })
 export class JobsComponent implements OnInit {
   jobs:Job[] = [];
+  searchfilter : any = '';
+  query: string = '';
   constructor(private jobDataService : JobDataService, private route : ActivatedRoute) { }
   ngOnInit(): void {
     let httpparams = new HttpParams();
@@ -37,16 +39,9 @@ export class JobsComponent implements OnInit {
       }
     });
     console.log(httpparams);
-    if(httpparams.has('count') || httpparams.has('offset') || httpparams.has('ltm')){
-      console.log(httpparams);
-      this.jobDataService.getJobByFilter(httpparams)
+    this.jobDataService.getJobService(httpparams)
       .then(resolve => this._setJobs(resolve))
       .catch(this._errorHandle);
-    }else{
-      this.jobDataService.getJobService()
-      .then(resolve => this._setJobs(resolve))
-      .catch(this._errorHandle);
-    }
   }
   private _setJobs(Jobs : Job[]){
     console.log("Set Jobs");

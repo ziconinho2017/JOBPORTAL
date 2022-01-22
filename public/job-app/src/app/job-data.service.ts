@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Job } from './jobs/jobs.component';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,18 +9,12 @@ import { Job } from './jobs/jobs.component';
 export class JobDataService {
   #baseUrl =  "http://localhost:4000/api/";
   constructor(private httpC : HttpClient) { }
-  public getJobService() : Promise<Job[]>{
+  public getJobService(params : HttpParams) : Promise<Job[]>{
     console.log("Get Job Data Service Function");
     const url = this.#baseUrl+"jobs";
-    return this.httpC.get(url).toPromise()
+    return lastValueFrom(this.httpC.get(url,{params : params}))
         .then(resolve => resolve as Job[])
         .catch(this.handleError);
-  }
-  public getJobByFilter(params : HttpParams) : Promise<Job[]>{
-    const url = this.#baseUrl+"jobs";
-    return this.httpC.get(url,{params}).toPromise()
-            .then(resolve => resolve as Job[])
-            .catch(this.handleError);
   }
   private handleError(error: any) : Promise<any>{
     console.log(error);

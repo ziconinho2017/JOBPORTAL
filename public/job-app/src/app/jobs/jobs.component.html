@@ -1,4 +1,14 @@
 <h1>This is the Job Page</h1>
-<ul>
-    <li *ngFor = "let Job of jobs">{{Job.title}}</li>
-</ul>
+<input type="text" placeholder="Search" [(ngModel)]="query" id="listSearch">
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Salary</th>
+        <th>Location</th>
+    </tr>
+    <tr *ngFor = "let Job of jobs | searchFilter:query">
+        <td>{{Job.title}}</td>
+        <td>{{Job.salary}}</td>
+        <td>{{Job.location}}</td>
+    </tr>
+</table>
